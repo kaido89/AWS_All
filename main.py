@@ -1,5 +1,4 @@
-import os
-import csv
+import os, sys, csv
 from datetime import datetime
 try:
     import yaml
@@ -25,18 +24,38 @@ def create_output_file():
 
 
 def setup_config():
-    # save to yml file
+    if not os.path.exists(os.path.expanduser('configuration/')):
+        os.makedirs(os.path.expanduser('configuration'))
+    aws_config_path = os.path.expanduser('configuration/')
+    aws_config = open(aws_config_path + "aws.conf", "w+")
+    profile = input('AWS profile: ')
+    aws_config.write("profile : \""+profile+"\"\n")
+    region = input('AWS region: ')
+    aws_config.write("region : \"" + region + "\"\n")
+    return main()
+
+
+def load_settings():
+    aws_config_path = os.path.expanduser('configuration/')
+    aws_config = open(aws_config_path + "aws.conf", "r")
+    aws_yml = yaml.load(aws_config)
+    print('Profile: '+aws_yml['profile']+', Region: '+aws_yml['region'])
     return
 
 
 def main():
-    print('Option:\n1- Setup\n2- Load Settings\n3- Create new output file')
+    print('Option:\n1 - Setup AWS\n2 - Load Settings\n3 - Create new output file\n0 - Exit')
     option = input('Choose one of the options: ')
     try:
         if '1' == option:
             setup_config()
         elif '2' == option:
+            load_settings()
+        elif '3' == option:
             create_output_file()
+        elif '0' == option:
+            print('Successfully exited the program')
+            sys.exit()
         else:
             raise OptionInvalid
     except OptionInvalid:
