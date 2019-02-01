@@ -2,6 +2,14 @@ import boto3
 from botocore.exceptions import ClientError
 
 
+def delete_user_from_group(iam_session, user):
+    try:
+        for group in iam_session.list_groups_for_user(UserName=user)['Groups']:
+            iam_session.remove_user_from_group(GroupName=group['GroupName'], UserName=user)
+    except ClientError:
+        print('No User From Group')
+
+
 def delete_login_profile(iam_session, user):
     try:
         iam_session.delete_login_profile(UserName=user)
@@ -11,8 +19,8 @@ def delete_login_profile(iam_session, user):
 
 def function_delete_user(iam_session, user):
     delete_login_profile(iam_session, user)
+    delete_user_from_group(iam_session, user)
     # # To be Fixed
-    # iam_session.remove_user_from_group(UserName='', GroupName=user)
     # iam_session.detach_user_policy(UserName=user, PolicyArn='')
     # iam_session.delete_access_key(UserName=user, AccessKeyId='')
     # iam_session.deactivate_mfa_device(UserName=user, SerialNumber='')
