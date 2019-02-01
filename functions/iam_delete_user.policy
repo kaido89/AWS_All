@@ -1,0 +1,24 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "iam:DeactivateMFADevice",
+                "iam:DeleteAccessKey",
+                "iam:RemoveUserFromGroup",
+                "iam:DeleteVirtualMFADevice",
+                "iam:ListAttachedUserPolicies",
+                "iam:DeleteUser",
+                "iam:ListMFADevices",
+                "iam:DetachUserPolicy",
+                "iam:TagUser",
+                "iam:DeleteLoginProfile",
+                "iam:ListUserTags",
+                "iam:ListAccessKeys"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
