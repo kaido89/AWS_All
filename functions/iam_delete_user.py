@@ -71,6 +71,9 @@ def delete_user_with_instance_role(user):
 
 def delete_user_with_new_role(user, new_role_arn, region):
     sts = boto3.client('sts', region_name=region)
-    session = sts.assume_role(RoleArn=new_role_arn, RoleSessionName="role_to_delete_user", DurationSeconds=3600)
-    iam_session = session('iam')
+    response = sts.assume_role(RoleArn=new_role_arn, RoleSessionName="role_to_delete_user", DurationSeconds=3600)
+    session = boto3.Session(aws_access_key_id=response['Credentials']['AccessKeyId'],
+                            aws_secret_access_key=response['Credentials']['SecretAccessKey'],
+                            aws_session_token=response['Credentials']['SessionToken'], region_name='us-east-1')
+    iam_session = session.client('iam')
     function_delete_user(iam_session, user)
