@@ -1,0 +1,18 @@
+# 1 - Firstly, create a lib folder
+LIB_DIR=boto3-latest/python/lib/python3.7/site-packages 
+mkdir -p $LIB_DIR 
+
+# 2 - Install the library to LIB_DIR
+pip3 install boto3 -t $LIB_DIR 
+
+# 3 - Zip all the dependencies to boto3-latest.zip 
+cd boto3-latest 
+zip -r ../boto3-latest . 
+
+# 4 - Publish the layer
+aws lambda publish-layer-version --layer-name boto3-latest --zip-file fileb://boto3-latest.zip   
+# The above should return an ARN for a layer in the form:
+# "arn:aws:lambda:region:ACC_ID:layer:boto3-latest:1" 
+
+# 5 - Add the layer to the function's configuration
+aws lambda update-function-configuration --function-name <my-function> --layers arn:aws:lambda:region:ACC_ID:layer:boto3-latest:1 
